@@ -21,18 +21,16 @@
 
 ## 一键安装
 
-> 将仓库推送到你的 GitHub 后，把命令中的 `<YOUR_USER>/<YOUR_REPO>` 替换为你的用户名和仓库名（并同步修改 [`install.sh`](install.sh) 顶部的 `DEFAULT_REPO_RAW`）。
-
 ### 国外服务器
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<YOUR_USER>/<YOUR_REPO>/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/xhpx7301/System-reinstallation/main/install.sh | bash
 ```
 
 ### 国内服务器（默认启用 CN 镜像偏好）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<YOUR_USER>/<YOUR_REPO>/main/install.sh | bash -s -- --cn
+curl -fsSL https://raw.githubusercontent.com/xhpx7301/System-reinstallation/main/install.sh | bash -s -- --cn
 ```
 
 ### 本地仓库安装（测试/自用）

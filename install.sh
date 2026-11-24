@@ -1,13 +1,12 @@
 #!/usr/bin/env sh
 # One-click installer for SR (Interactive menu for https://github.com/bin456789/reinstall)
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/<YOUR_USER>/<YOUR_REPO>/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/xhpx7301/System-reinstallation/main/install.sh | bash
 #   bash install.sh [--cn] [--force] [--no-prefetch] [--user] [--uninstall]
 
 set -eu
 
-# Replace with your repository's raw base URL after pushing to GitHub
-DEFAULT_REPO_RAW="https://raw.githubusercontent.com/<YOUR_USER>/<YOUR_REPO>/main"
+DEFAULT_REPO_RAW="https://raw.githubusercontent.com/xhpx7301/System-reinstallation/main"
 SR_REPO_RAW="${SR_REPO_RAW:-$DEFAULT_REPO_RAW}"
 SR_REPO_RAW_CN="${SR_REPO_RAW_CN:-}"
 
