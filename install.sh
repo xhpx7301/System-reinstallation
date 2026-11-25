@@ -2,7 +2,7 @@
 # One-click installer for SR (Interactive menu for https://github.com/bin456789/reinstall)
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/xhpx7301/System-reinstallation/main/install.sh | bash
-#   bash install.sh [--cn] [--force] [--no-prefetch] [--user] [--uninstall]
+#   bash install.sh [--cn] [--force] [--no-prefetch] [--no-run] [--user] [--uninstall]
 
 set -eu
 
@@ -13,6 +13,7 @@ SR_REPO_RAW_CN="${SR_REPO_RAW_CN:-}"
 OPT_FORCE=0
 OPT_CN=0
 OPT_NO_PREFETCH=0
+OPT_NO_RUN=0
 OPT_USER=0
 OPT_UNINSTALL=0
 OPT_REMOTE=0
@@ -33,6 +34,7 @@ SR 一键安装脚本
   --raw-url URL   指定托管 sr 脚本的 Raw 基础 URL
   --cn            优先使用国内镜像 (cnb.cool) 预拉取 reinstall.sh
   --no-prefetch   安装时不预拉取上游 reinstall.sh
+  --no-run        仅安装不自动打开管理菜单
   --force, -f     若系统已有同名 sr/SR 命令则强制覆盖
   --user          强制安装到用户目录 (~/.local/bin)
   --remote        即使本地存在 ./sr 也从远程拉取
@@ -55,6 +57,10 @@ while [ "$#" -gt 0 ]; do
             ;;
         --no-prefetch)
             OPT_NO_PREFETCH=1
+            shift
+            ;;
+        --no-run)
+            OPT_NO_RUN=1
             shift
             ;;
         -f|--force)
@@ -280,9 +286,23 @@ fi
 info "安装完成！已注册快捷命令: $SR_BIN 和 $SR_ALIAS"
 case ":$PATH:" in
     *":$BIN_DIR:"*)
-        info "现在可以直接在终端输入 SR 或 sr 调出管理菜单。"
+        info "后续可在终端随时输入 SR 或 sr 调出管理菜单。"
         ;;
     *)
         warn "$BIN_DIR 不在当前 PATH 中，请执行: export PATH=\"$BIN_DIR:\$PATH\""
         ;;
 esac
+
+if [ "$OPT_NO_RUN" -eq 0 ]; then
+    rm -f "$TMP_SR"
+    trap - EXIT INT TERM
+    if [ -t 0 ]; then
+        info "正在打开 SR 管理菜单..."
+        exec $SUDO "$SR_BIN"
+    elif (: </dev/tty) 2>/dev/null; then
+        info "正在打开 SR 管理菜单..."
+        exec $SUDO "$SR_BIN" </dev/tty
+    else
+        info "未检测到交互式终端，跳过自动打开菜单。请手动输入 SR 或 sr 启动。"
+    fi
+fi

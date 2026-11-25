@@ -21,6 +21,8 @@
 
 ## 一键安装
 
+执行后会自动注册 `SR` / `sr` 命令并**默认打开管理菜单**；后续在终端输入 `SR` 或 `sr` 也可随时调出。
+
 ### 国外服务器
 
 ```bash
@@ -43,6 +45,7 @@ bash install.sh
 
 * `--cn`：默认配置使用国内源（`cnb.cool`）拉取 `reinstall.sh` 并开启 `--force-cn`
 * `--no-prefetch`：安装时不预拉取 `reinstall.sh`
+* `--no-run`：仅完成安装，不自动打开管理菜单
 * `--force` / `-f`：如果系统中已有非 SR 的同名 `sr`/`SR` 命令则强制覆盖
 * `--user`：安装到 `~/.local/bin`（非 root 预览测试用）
 * `--raw-url URL`：自定义托管 `sr` 的 Raw 基础 URL
