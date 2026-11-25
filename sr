@@ -557,14 +557,26 @@ prompt_common_auth_ports() {
     printf '\n%s--- 账号与连接设置 (直接回车保留默认/留空由上游自动处理) ---%s\n' "$C_CYAN" "$C_RESET"
     read_input "用户名 (留空默认 $default_user_hint)" "$OPT_USER" OPT_USER
 
-    if [ "$mode" != "windows" ]; then
-        prompt_ssh_key "$CFG_SSH_KEY" OPT_SSH_KEY
+    if [ "$mode" = "windows" ]; then
+        read_secret "登录密码 (输入时不可见；留空则按上游默认/随机生成)" OPT_PASS
+    else
+        printf '\n%s登录认证方式%s (注意: 上游不支持同时设置密码与 SSH 公钥)\n' "$C_CYAN" "$C_RESET"
+        printf '  1) SSH 密钥登录 (使用公钥，无登录密码)\n'
+        printf '  2) 密码登录     (不使用公钥，设置登录密码)\n'
+        local auth_def="1"
+        local auth_mode=""
+        read_input "请选择认证方式 [1/2]" "$auth_def" auth_mode
+        if [ "$auth_mode" = "2" ]; then
+            OPT_SSH_KEY=""
+            read_secret "登录密码 (输入时不可见；留空则按上游默认/随机生成)" OPT_PASS
+        else
+            prompt_ssh_key "$CFG_SSH_KEY" OPT_SSH_KEY
+            if [ -z "$OPT_SSH_KEY" ]; then
+                msg_info "未设置 SSH 公钥，改为密码设置。"
+                read_secret "登录密码 (输入时不可见；留空则按上游默认/随机生成)" OPT_PASS
+            fi
+        fi
     fi
-
-    if [ -n "$OPT_SSH_KEY" ] && [ "$mode" = "linux" ]; then
-        msg_info "已配置 SSH 公钥（上游在启用公钥时密码默认为空，如需同时设密码可输入，否则直接回车跳过）。"
-    fi
-    read_secret "登录密码 (输入时不可见；留空则按上游默认/随机生成)" OPT_PASS
 
     while true; do
         read_input "SSH 端口 (留空默认 22)" "$OPT_SSH_PORT" OPT_SSH_PORT
